@@ -19,8 +19,10 @@ def parse_attrs(body):
 
 def build_payload(body, attrs):
     lookup = TemplateLookup(directories=[os.getcwd()])
-    tmpl = Template(body, lookup=lookup,
-                    lexer_cls=MarkdownLexer)
+    tmpl = Template(
+        body, lookup=lookup,
+        lexer_cls=MarkdownLexer,
+    )
     renderd_body = tmpl.render(
         attrs=attrs,
     )
@@ -60,6 +62,10 @@ class Article(object):
     @property
     def payload_str(self):
         return json.dumps(self.payload)
+
+    @property
+    def body(self):
+        return self.payload['body']
 
 
 def build_article(filepath, encoding='utf8'):
