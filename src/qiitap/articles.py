@@ -17,8 +17,15 @@ def parse_attrs(body):
     return {}
 
 
-def build_payload(body, attrs):
-    lookup = TemplateLookup(directories=[os.getcwd()])
+def build_payload(body, attrs, filepath=None):
+    curdir = os.getcwd()
+    lookup_directories = []
+    if filepath is not None:
+        filedir = os.path.dirname(os.path.abspath(filepath))
+        os.chdir(filedir)
+        lookup_directories.append(filedir)
+    lookup_directories.append(curdir)
+    lookup = TemplateLookup(directories=lookup_directories)
     tmpl = Template(
         body, lookup=lookup,
         lexer_cls=MarkdownLexer,
@@ -26,6 +33,7 @@ def build_payload(body, attrs):
     renderd_body = tmpl.render(
         attrs=attrs,
     )
+    os.chdir(curdir)
 
     return {
         'title': attrs['title'],
@@ -72,5 +80,5 @@ def build_article(filepath, encoding='utf8'):
     with open(filepath, 'rt', encoding='utf8') as fp:
         buf = fp.read()
         attrs = parse_attrs(buf)
-        payload = build_payload(buf, attrs)
+        payload = build_payload(buf, attrs, filepath)
         return Article(filepath, payload, attrs)
