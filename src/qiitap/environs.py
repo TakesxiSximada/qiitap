@@ -34,6 +34,9 @@ class QiitapEnviron(object):
 
     @property
     def default_tags(self):
+        default_tags = os.environ.get('QIITA_TAGS')
+        if default_tags:
+            return default_tags
         with open(self.default_tags_path) as fp:
             default_tags = fp.readline().strip()
         return default_tags
