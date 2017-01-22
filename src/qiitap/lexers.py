@@ -8,13 +8,39 @@ from mako import (
 
 
 class MarkdownLexer(lexer.Lexer):
+    def match_text(self):
+        match = self.match(r"""
+                (.*?)         # anything, followed by:
+                (
+                 (?<=\n)(?=[ \t]*(?=%)) # an eval or line-based
+                                             # comment preceded by a
+                                             # consumed newline and whitespace
+                 |
+                 (?=\${)      # an expression
+                 |
+                 (?=</?[%&])  # a substitution or block or call start or end
+                              # - don't consume
+                 |
+                 (\\\r?\n)    # an escaped newline  - throw away
+                 |
+                 \Z           # end of string
+                )""", re.X | re.S)
+
+        if match:
+            text = match.group(1)
+            if text:
+                self.append_node(parsetree.Text, text)
+            return True
+        else:
+            return False
+
+
     def match_control_line(self):
         # <MATCH_CONTROL_RE>
         match = self.match(
             r"(?<=^)[\t ]*(%(?!%))[\t ]*((?:(?:\\r?\n)|[^\r\n])*)"
             r"(?:\r?\n|\Z)", re.M)
         # </MATCH_CONTROL_RE>
-
         if match:
             operator = match.group(1)
             text = match.group(2)
