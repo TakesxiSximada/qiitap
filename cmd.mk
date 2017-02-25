@@ -1,4 +1,4 @@
-.DEFAULT_GOAL: help
+.DEFAULT_GOAL := help
 
 
 .PHONY: pypi
@@ -29,6 +29,13 @@ testpypi: wheel
 
 	twine register dist/*.whl -r testpypi
 	twine upload dist/*.whl -r testpypi
+
+
+.PHONY: clean
+clean:
+	@# clean build directory
+
+	rm -rf build dist
 
 
 .PHONY: help
