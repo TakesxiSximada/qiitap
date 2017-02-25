@@ -34,7 +34,6 @@ class MarkdownLexer(lexer.Lexer):
         else:
             return False
 
-
     def match_control_line(self):
         # <MATCH_CONTROL_RE>
         match = self.match(

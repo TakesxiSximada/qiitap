@@ -10,10 +10,11 @@ from .. import (
 initail_markdown_template = """<!---
 <%namespace name="qiitap" module="qiitap"/>
 <%doc>
-title: {title}
+title: "{title}"
 item_id: {item_id}
-tags: {tags}
 private: {private}
+tags:
+{tags_text}
 </%doc>
 --->
 
@@ -33,7 +34,8 @@ def main(argv=sys.argv[1:]):
     parser.add_argument('--tags', default='Qiita')
 
     args = parser.parse_args(argv)
-    tags = [{'name': tag} for tag in args.tags.split(',')]
+    tags = args.tags.split(',')
+
     if args.no_body:
         body = 'Writting...'
     else:
@@ -50,7 +52,7 @@ def main(argv=sys.argv[1:]):
             'coediting': False,
             'private': private,
             'tweet': tweet,
-            'tags': tags,
+            'tags': [{'name': tag} for tag in tags],
         },
         attrs={
             'title': title,
@@ -59,12 +61,13 @@ def main(argv=sys.argv[1:]):
     )
     client = clients.get_client()
     article = client.create(article)
+    tags_text = ''.join('    - name: {}\n'.format(tag) for tag in tags)
     with open(args.filepath, 'w+', encoding='utf8') as fp:
         fp.write(initail_markdown_template.format(
             title=title,
             body=body,
             item_id=article.item_id,
-            tags=tags,
+            tags_text=tags_text,
             private=private,
         ))
     print('Output: {} (URL={})'.format(args.filepath, article.url))
