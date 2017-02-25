@@ -85,7 +85,7 @@ setup(
         'Topic :: Software Development',
     ],
     author='TakesxiSximada',
-    author_email='sximada@gmail.com',
+    author_email='sximada+qiitap@gmail.com',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     platforms='any',
