@@ -31,7 +31,7 @@ def main(argv=sys.argv[1:]):
     parser.add_argument('--no-body', default=False, action='store_true')
     parser.add_argument('--tweet', default=False, action='store_true')
     parser.add_argument('--gist', default=False, action='store_true')
-    parser.add_argument('--tags', default='Qiita')
+    parser.add_argument('--tags', default='qiitap')
 
     args = parser.parse_args(argv)
     tags = args.tags.split(',')

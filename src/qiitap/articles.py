@@ -5,6 +5,7 @@ import mako.parsetree
 from mako.template import Template
 from mako.lookup import TemplateLookup
 
+from . import __version__
 from .lexers import MarkdownLexer
 
 
@@ -43,9 +44,9 @@ def build_payload(body, attrs, filepath=None):
         'private': attrs.get('private', False),
         'tags': attrs.get('tags', [
             {
-                'name': 'Qiita',
+                'name': 'qiitap',
                 'versions': [
-                    '0.0.1'
+                    __version__,
                 ]
             },
         ]),
